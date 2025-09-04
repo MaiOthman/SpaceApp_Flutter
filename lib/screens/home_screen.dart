@@ -1,58 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:space_app/colors/app_colors.dart';
 import 'package:space_app/elevated_button.dart';
+import 'package:space_app/floating_action_button.dart';
+import 'package:space_app/model/planet.dart';
+import 'package:space_app/screens/app_bar_bottom.dart';
+import 'package:space_app/screens/flexible_spacer.dart';
+import 'package:space_app/utilis/app_assets.dart';
+import 'package:space_app/utilis/app_routes.dart';
+import 'package:space_app/utilis/app_styles.dart';
 
-class HomeScreen extends StatelessWidget{
-  static String routeName = 'home';
+import '../utilis/app_colors.dart';
+
+class HomeScreen extends StatefulWidget{
+  List<Planet> planetList= [
+    Planet(image: AppAssets.earth, name: 'Earth'),
+    Planet(image: AppAssets.jupiter, name: 'Jupiter'),
+    Planet(image: AppAssets.mars, name: 'Mars'),
+    Planet(image: AppAssets.mercury, name: 'Mercury'),
+    Planet(image: AppAssets.neptune, name: 'Neptune'),
+    Planet(image: AppAssets.saturn, name: 'Saturn'),
+    Planet(image: AppAssets.sun, name: 'Sun'),
+    Planet(image: AppAssets.uranus, name: 'Uranus'),
+    Planet(image: AppAssets.venus, name: 'Venus'),
+  ];
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(AppColors.black),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          //TODO gradient to be modified
-    decoration: BoxDecoration(gradient: LinearGradient(colors: [Color(AppColors.black), Color(AppColors.white)],
-    ),
-    ),
-          child: Stack(fit: StackFit.expand,alignment: Alignment.bottomCenter,
-            children: [Image.asset('assets/images/img_1.png',
-            alignment: Alignment.center, fit: BoxFit.fill,),
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Text('Explore', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(AppColors.white)), textAlign: TextAlign.center,),
-            )
-          ],),
-        ),
+        flexibleSpace: FlexibleSpacer(text: 'Explore'),
         bottom: PreferredSize(preferredSize: Size.fromHeight(72),
-    child: Container(
-      alignment: Alignment.bottomLeft,
-      margin: EdgeInsetsGeometry.symmetric(horizontal: 16, vertical: 8),
-      child: Text("Which planet \n would you like to explore ?",
-          style: TextStyle( letterSpacing: -0.03,fontFamily: 'Space Grotesk', color: Color(AppColors.white), fontSize: 24, fontWeight: FontWeight.w700),
-      textAlign: TextAlign.left
-      ),
-    ),
-        )
+    child: AppBarBottom(text: "Which planet \n would you like to explore ?"))
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: [
-      Image.asset('assets/images/earth.png'),
+      Image.asset(widget.planetList[index].image),
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-          FloatingActionButton(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),backgroundColor: Color(AppColors.red),onPressed: (){}, child: Icon(Icons.arrow_back_ios_new, color: Color(AppColors.white),),
-          ), Text("Earth", style: TextStyle(color: Color(AppColors.white,), fontWeight: FontWeight.w700, fontSize: 24)),
-          FloatingActionButton(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),backgroundColor: Color(AppColors.red),onPressed: (){}, child: Icon(Icons.arrow_forward_ios, color: Color(AppColors.white),),
-          )
+         MyFloatingActionButton(tag: 'btn1', myOnPressed: backFunction, icon: Icons.arrow_back_outlined)
+          , Text(widget.planetList[index].name, style: AppStyles.bold24White ),
+         MyFloatingActionButton(tag: 'btn2',myOnPressed: forwardFunction,
+           icon: Icons.arrow_forward,)
         ],),
       ),
-      ElevatedButtonDesign(text: 'Explore Earth')
-          ]
-
-      ),
+      ElevatedButtonDesign(text: 'Explore ${widget.planetList[index].name}',
+        myOnPressed: ()=>Navigator.of(context).pushNamed(AppRoutes.detailsRouteName))
+     ] ),
     );
   }
 
+  void backFunction() {
+    if(index == 0) return;
+    else {
+      setState(() {
+        index--;
+      });
+    }
+  }
+
+  void forwardFunction() {
+    if (index == widget.planetList.length-1) return;
+    else{
+      setState(() {
+        index++;
+      });
+    }
+  }
 }

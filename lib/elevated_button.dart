@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:space_app/colors/app_colors.dart';
-import 'package:space_app/screens/home_screen.dart';
+import 'package:space_app/utilis/app_colors.dart';
+import 'package:space_app/utilis/app_styles.dart';
 
 class ElevatedButtonDesign extends StatelessWidget{
   String text;
-  ElevatedButtonDesign({required this.text});
+  VoidCallback myOnPressed;
+  ElevatedButtonDesign({required this.text, required this.myOnPressed});
   @override
   Widget build(BuildContext context) {
     return  Container(
@@ -12,16 +13,15 @@ class ElevatedButtonDesign extends StatelessWidget{
       padding: EdgeInsetsGeometry.symmetric(vertical: 1, horizontal: 8),
 
       child: ElevatedButton(
-          onPressed: (){
-            Navigator.of(context).pushNamed(HomeScreen.routeName);
-          },
+          onPressed:
+            myOnPressed,
           style: ElevatedButton.styleFrom(backgroundColor: Color(AppColors.red))
           , child:
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(text, style: TextStyle(color: Color(AppColors.white), fontWeight: FontWeight.w600, fontSize: 20),),
+                children: [Text(text, style: AppStyles.bold20White,),
                   Icon(Icons.arrow_forward, color: Color(AppColors.white),
                   ),
                 ]
